@@ -1,0 +1,20 @@
+{
+  "name": "moodle-schdule-extention",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension project for Moodle schedule support.",
+  "type": "module",
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "vitest": "^3.2.0"
+  }
+}
