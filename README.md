@@ -42,6 +42,12 @@ pnpm lint
 pnpm check
 ```
 
+### ビルド
+
+```bash
+pnpm build
+```
+
 ### テスト
 
 ```bash
@@ -52,6 +58,27 @@ pnpm test
 
 ```bash
 pnpm test:watch
+```
+
+## CI/CD
+
+GitHub ActionsでCIとChrome拡張機能用zipの作成を実行します。
+
+CIはPull Request作成時と`main`ブランチへのpush時に実行されます。依存関係は`pnpm install --frozen-lockfile`でインストールし、次のコマンドを順番に実行します。
+
+```bash
+pnpm format:check
+pnpm lint
+pnpm test
+pnpm build
+```
+
+CDは`main`ブランチへのpush時と手動実行時に実行されます。`pnpm build`で作成した`dist/`をzip化し、`extension.zip`をGitHub Actionsのartifactとして保存します。
+
+```bash
+pnpm build
+cd dist
+zip -r ../extension.zip .
 ```
 
 ## 開発メモ
