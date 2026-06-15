@@ -6,12 +6,12 @@ const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 function getSubjects() {
   const subjects = [];
 
-  document.querySelectorAll('.subject').forEach(el => {
-    const a = el.querySelector('a.active-course-name');
+  for (const el of document.querySelectorAll(".subject")) {
+    const a = el.querySelector("a.active-course-name");
     if (a) {
       subjects.push(a.textContent.trim());
     }
-  });
+  }
 
   return subjects;
 }
@@ -23,15 +23,15 @@ async function run() {
   const subjectCodes = subjects.map(convertSubjectToCode);
   const syllabusUrls = await Promise.all(subjectCodes.map(convertCodeToSyllabusUrl));
 
-  console.log('取得した授業一覧:', subjects);
-  console.log('取得した授業コード一覧:', subjectCodes);
-  console.log('生成したシラバスURL一覧:', syllabusUrls);
+  console.log("取得した授業一覧:", subjects);
+  console.log("取得した授業コード一覧:", subjectCodes);
+  console.log("生成したシラバスURL一覧:", syllabusUrls);
   // ここに処理を追加する
   return true;
 }
 
 function convertSubjectToCode(subject) {
-  const code = subject.split(':')[0];
+  const code = subject.split(":")[0];
   return code;
 }
 
@@ -67,7 +67,7 @@ async function getCachedSyllabusUrl(code) {
   } catch (error) {
     // ストレージの読み込みに失敗しても、Moodleの表示を止めずに
     // APIから取得する処理へフォールバックする
-    console.error('キャッシュの読み込みに失敗しました:', error);
+    console.error("キャッシュの読み込みに失敗しました:", error);
     return null;
   }
 }
@@ -83,13 +83,13 @@ async function saveCachedSyllabusUrl(code, syllabusUrl) {
         courseCode: code,
         syllabusUrl,
         // 現在時刻からCACHE_TTL_MS（7日間）後を有効期限とする
-        expiresAt: Date.now() + CACHE_TTL_MS
-      }
+        expiresAt: Date.now() + CACHE_TTL_MS,
+      },
     });
   } catch (error) {
     // 保存に失敗しても、取得済みのURLは利用できるようにするため
     // ここではエラーを表示するだけにする
-    console.error('キャッシュの保存に失敗しました:', error);
+    console.error("キャッシュの保存に失敗しました:", error);
   }
 }
 
@@ -104,7 +104,7 @@ async function convertCodeToSyllabusUrl(code) {
 
   // 2. キャッシュが無い場合は、APIへアクセスして取得する
   const res = await fetch(
-    `https://withered-salad-b4aa.yudai-syllabus.workers.dev/syllabus?code=${code}`
+    `https://withered-salad-b4aa.yudai-syllabus.workers.dev/syllabus?code=${code}`,
   );
 
   const syllabus = await res.json();
@@ -124,7 +124,7 @@ async function convertCodeToSyllabusUrl(code) {
 
 // 要素が動的に追加されるのを監視
 const observer = new MutationObserver(() => {
-  run().then(success => {
+  run().then((success) => {
     if (success) {
       observer.disconnect(); // 取得できたら監視終了
     }
