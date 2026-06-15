@@ -1,0 +1,53 @@
+/* timetable-custom.css — My時間割表(.block_rutime_table)の表示調整 */
+
+/* 1. 内部スクロールを無効化し全体を表示 */
+.block_rutime_table .timetable-table,
+.block_rutime_table .timetable-main,
+.block_rutime_table .card-text.content,
+.block_rutime_table .card-body {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* 2. 各科目セルのフラグアイコン(お気に入り/アナウンス/課題/フォーラム)を非表示 */
+.block_rutime_table .subject span:has(.favouriteicon),
+.block_rutime_table .subject span:has(.newsicon),
+.block_rutime_table .subject span:has(.assignicon),
+.block_rutime_table .subject span:has(.forumicon),
+.block_rutime_table .subject br {
+  display: none !important;
+}
+.block_rutime_table .subject .favouriteicon,
+.block_rutime_table .subject .newsicon,
+.block_rutime_table .subject .assignicon,
+.block_rutime_table .subject .forumicon {
+  display: none !important;
+}
+
+/* 3. 土曜日の列を非表示(各行7番目のセル) */
+.block_rutime_table table.timetable thead th:nth-child(7),
+.block_rutime_table table.timetable tbody td:nth-child(7) {
+  display: none !important;
+}
+
+/* 4. 各科目セルの上下の余白を圧縮 */
+.block_rutime_table table.timetable tbody td {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+.block_rutime_table .subjects {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.block_rutime_table .subject {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 1.25 !important;
+}
+.block_rutime_table .subject .room {
+  margin-top: 1px !important;
+  margin-bottom: 0 !important;
+}
