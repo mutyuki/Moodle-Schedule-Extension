@@ -4,9 +4,7 @@
   "version": "1.0",
   "description": "Moodleから授業情報を取得する拡張機能",
   "permissions": ["scripting", "activeTab"],
-  "host_permissions": [
-    "https://lms.ritsumei.ac.jp/*"
-  ],
+  "host_permissions": ["https://lms.ritsumei.ac.jp/*"],
   "content_scripts": [
     {
       "matches": ["https://lms.ritsumei.ac.jp/*"],

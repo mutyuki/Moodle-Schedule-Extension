@@ -1,17 +1,17 @@
 (() => {
-  const STYLE_ID = 'rits-syllabus-button-style';
-  const BUTTON_CLASS = 'my-syllabus-btn';
-  const BUTTON_WRAP_CLASS = 'my-syllabus-btn-wrap';
-  const ADDED_ATTR = 'data-syllabus-button-added';
+  const STYLE_ID = "rits-syllabus-button-style";
+  const BUTTON_CLASS = "my-syllabus-btn";
+  const BUTTON_WRAP_CLASS = "my-syllabus-btn-wrap";
+  const ADDED_ATTR = "data-syllabus-button-added";
 
   // =========================
-// 1. ボタンのデザイン CSS
-// =========================
-if (!document.getElementById(STYLE_ID)) {
-  const style = document.createElement('style');
-  style.id = STYLE_ID;
+  // 1. ボタンのデザイン CSS
+  // =========================
+  if (!document.getElementById(STYLE_ID)) {
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
 
-  style.textContent = `
+    style.textContent = `
     .${BUTTON_WRAP_CLASS} {
       width: 100%;
       display: flex;
@@ -58,8 +58,8 @@ if (!document.getElementById(STYLE_ID)) {
     }
   `;
 
-  document.head.appendChild(style);
-}
+    document.head.appendChild(style);
+  }
   // =========================
   // 2. 授業情報の文字列を取得
   // =========================
@@ -68,11 +68,12 @@ if (!document.getElementById(STYLE_ID)) {
     const clone = subjectElement.cloneNode(true);
 
     // 追加済みのシラバスボタン部分を取り除く
-    clone.querySelectorAll(`.${BUTTON_WRAP_CLASS}, .${BUTTON_CLASS}`).forEach((el) => {
+    const removableEls = clone.querySelectorAll(`.${BUTTON_WRAP_CLASS}, .${BUTTON_CLASS}`);
+    for (const el of removableEls) {
       el.remove();
-    });
+    }
 
-    return clone.textContent.replace(/\s+/g, ' ').trim();
+    return clone.textContent.replace(/\s+/g, " ").trim();
   }
 
   // =========================
@@ -99,9 +100,7 @@ if (!document.getElementById(STYLE_ID)) {
     const text = getSubjectText(subjectElement);
 
     // 授業コード部分を消して、だいたいの授業名だけにする
-    return text
-      .replace(/(?:^|[^\d])\d{5}\s*[:：]/g, '')
-      .trim();
+    return text.replace(/(?:^|[^\d])\d{5}\s*[:：]/g, "").trim();
   }
 
   // =========================
@@ -112,16 +111,13 @@ if (!document.getElementById(STYLE_ID)) {
     const courseName = getCourseName(subjectElement);
 
     if (courseCodes.length === 0) {
-      alert('授業コードを取得できませんでした。');
-      console.log('授業コード取得失敗:', getSubjectText(subjectElement));
+      alert("授業コードを取得できませんでした。");
+      console.log("授業コード取得失敗:", getSubjectText(subjectElement));
       return;
     }
 
     // いったん確認用
-    alert(
-      `授業コード: ${courseCodes.join(', ')}\n` +
-      `授業名: ${courseName}`
-    );
+    alert(`授業コード: ${courseCodes.join(", ")}\n` + `授業名: ${courseName}`);
 
     // 次の段階でここにシラバスページを開く処理を書く
     // 例:
@@ -135,15 +131,15 @@ if (!document.getElementById(STYLE_ID)) {
   function addButtons() {
     const subjects = document.querySelectorAll(`.subject:not([${ADDED_ATTR}])`);
 
-    subjects.forEach((subjectElement) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = 'シラバス';
+    for (const subjectElement of subjects) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "シラバス";
       button.classList.add(BUTTON_CLASS);
-      button.title = 'この授業のシラバスを開く';
-      button.setAttribute('aria-label', 'この授業のシラバスを開く');
+      button.title = "この授業のシラバスを開く";
+      button.setAttribute("aria-label", "この授業のシラバスを開く");
 
-      button.addEventListener('click', (event) => {
+      button.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -151,15 +147,15 @@ if (!document.getElementById(STYLE_ID)) {
       });
 
       // wrapperを作って中央寄せする
-      const buttonWrap = document.createElement('div');
+      const buttonWrap = document.createElement("div");
       buttonWrap.classList.add(BUTTON_WRAP_CLASS);
       buttonWrap.appendChild(button);
 
       subjectElement.appendChild(buttonWrap);
 
       // 二重追加防止
-      subjectElement.setAttribute(ADDED_ATTR, 'true');
-    });
+      subjectElement.setAttribute(ADDED_ATTR, "true");
+    }
   }
 
   // =========================
@@ -176,6 +172,6 @@ if (!document.getElementById(STYLE_ID)) {
 
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
 })();
