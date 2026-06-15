@@ -1,0 +1,6 @@
+{
+  "manifest_version": 3,
+  "name": "Moodle Schdule Extention",
+  "version": "0.1.0",
+  "description": "Chrome extension project for Moodle schedule support."
+}
