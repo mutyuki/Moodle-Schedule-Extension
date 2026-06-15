@@ -1,0 +1,21 @@
+node_modules/
+
+# OS files
+.DS_Store
+
+# Test output
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+
+# Build artifacts
+dist/
+build/
+extension.zip
