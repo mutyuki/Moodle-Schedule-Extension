@@ -3,7 +3,7 @@
   "name": "Moodle Schedule Extension",
   "version": "1.0",
   "description": "Moodleから授業情報を取得する拡張機能",
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "storage"],
   "host_permissions": [
     "https://lms.ritsumei.ac.jp/*"
   ],
