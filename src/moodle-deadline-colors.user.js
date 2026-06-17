@@ -10,6 +10,7 @@
 (() => {
   const STYLE_ID = "moodle-deadline-colors-style";
   const DATE_PATTERN = /(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/;
+  const TIME_PATTERN = /(?:^|\s)([01]?\d|2[0-3]):([0-5]\d)(?:\s|$)/;
   const TIMELINE_SELECTORS = [
     ".block_timeline",
     '[data-block="timeline"]',
@@ -84,6 +85,27 @@
 
     const [, year, month, day] = match;
     return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  function parseTime(text) {
+    const match = text.match(TIME_PATTERN);
+
+    if (!match) {
+      return null;
+    }
+
+    const [, hour, minute] = match;
+    return { hour: Number(hour), minute: Number(minute) };
+  }
+
+  function combineDateAndTime(date, time) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time?.hour ?? 23,
+      time?.minute ?? 59,
+    );
   }
 
   function parseDateTimeElement(container) {
@@ -179,14 +201,15 @@
   }
 
   function findDeadline(event) {
+    const eventTime = parseTime(event.textContent);
     const ownDateTime = parseDateTimeElement(event);
-    if (ownDateTime) {
+    if (ownDateTime && (ownDateTime.getHours() !== 0 || ownDateTime.getMinutes() !== 0)) {
       return ownDateTime;
     }
 
     const ownDate = parseDate(event.textContent);
     if (ownDate) {
-      return ownDate;
+      return combineDateAndTime(ownDate, eventTime);
     }
 
     let node = event;
@@ -197,7 +220,7 @@
       while (sibling) {
         const date = parseDate(sibling.textContent);
         if (date) {
-          return date;
+          return combineDateAndTime(date, eventTime);
         }
         sibling = sibling.previousElementSibling;
       }
