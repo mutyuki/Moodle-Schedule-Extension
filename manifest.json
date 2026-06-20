@@ -1,6 +1,29 @@
 {
   "manifest_version": 3,
-  "name": "Moodle Schdule Extention",
+  "name": "Moodle Schedule Extension",
   "version": "0.1.0",
-  "description": "Chrome extension project for Moodle schedule support."
+  "description": "Chrome extension project for Moodle schedule support.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://lms.ritsumei.ac.jp/*",
+    "https://withered-salad-b4aa.yudai-syllabus.workers.dev/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://lms.ritsumei.ac.jp/my/", "https://lms.ritsumei.ac.jp/my/index.php"],
+      "js": ["src/unread_annoucement_list/content.js", "src/moodle-deadline-colors.user.js"],
+      "css": ["src/unread_annoucement_list/style.css", "src/timetable-custom.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://lms.ritsumei.ac.jp/*"],
+      "js": ["src/button/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

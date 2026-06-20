@@ -3,6 +3,7 @@
   const BUTTON_CLASS = "my-syllabus-btn";
   const BUTTON_WRAP_CLASS = "my-syllabus-btn-wrap";
   const ADDED_ATTR = "data-syllabus-button-added";
+  const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7日間
 
   // =========================
   // 1. ボタンのデザイン CSS
@@ -60,14 +61,13 @@
 
     document.head.appendChild(style);
   }
+
   // =========================
   // 2. 授業情報の文字列を取得
   // =========================
   function getSubjectText(subjectElement) {
-    // 元の要素を直接いじらず、コピーしてからボタン部分を除去する
     const clone = subjectElement.cloneNode(true);
 
-    // 追加済みのシラバスボタン部分を取り除く
     const removableEls = clone.querySelectorAll(`.${BUTTON_WRAP_CLASS}, .${BUTTON_CLASS}`);
     for (const el of removableEls) {
       el.remove();
@@ -81,34 +81,82 @@
   // =========================
   function extractCourseCodes(subjectElement) {
     const text = getSubjectText(subjectElement);
-
-    // 例:
-    // 53169:英語中級107(5Q)
-    // 53385:データモデル論(A1)
-    // 53386:データモデリング(A1)
-    //
-    // 「5桁の数字 + : または ：」の5桁部分だけを取得
     const matches = [...text.matchAll(/(?:^|[^\d])(\d{5})(?=\s*[:：])/g)];
-
     return matches.map((match) => match[1]);
   }
 
   // =========================
-  // 4. 授業名を取得
+  // 4. キャッシュ関連ロジック
   // =========================
-  function getCourseName(subjectElement) {
-    const text = getSubjectText(subjectElement);
+  function createCacheKey(code) {
+    return `syllabus:${code}`;
+  }
 
-    // 授業コード部分を消して、だいたいの授業名だけにする
-    return text.replace(/(?:^|[^\d])\d{5}\s*[:：]/g, "").trim();
+  async function getCachedSyllabusUrl(code) {
+    try {
+      const key = createCacheKey(code);
+      const result = await chrome.storage.local.get(key);
+      const cached = result[key];
+
+      if (!cached) {
+        return null;
+      }
+
+      if (cached.expiresAt <= Date.now()) {
+        await chrome.storage.local.remove(key);
+        return null;
+      }
+
+      return cached.syllabusUrl;
+    } catch (error) {
+      console.error("キャッシュの読み込みに失敗しました:", error);
+      return null;
+    }
+  }
+
+  async function saveCachedSyllabusUrl(code, syllabusUrl) {
+    try {
+      const key = createCacheKey(code);
+
+      await chrome.storage.local.set({
+        [key]: {
+          courseCode: code,
+          syllabusUrl,
+          expiresAt: Date.now() + CACHE_TTL_MS,
+        },
+      });
+    } catch (error) {
+      console.error("キャッシュの保存に失敗しました:", error);
+    }
+  }
+
+  async function convertCodeToSyllabusUrl(code) {
+    const cachedUrl = await getCachedSyllabusUrl(code);
+    if (cachedUrl) {
+      console.log(`[キャッシュ] ${code}: ${cachedUrl}`);
+      return cachedUrl;
+    }
+
+    const res = await fetch(
+      `https://withered-salad-b4aa.yudai-syllabus.workers.dev/syllabus?code=${code}`,
+    );
+
+    const syllabusUrl = await res.text();
+
+    if (syllabusUrl?.startsWith("https://")) {
+      await saveCachedSyllabusUrl(code, syllabusUrl);
+      console.log(`[API] ${code}: ${syllabusUrl}`);
+      return syllabusUrl;
+    }
+
+    return null;
   }
 
   // =========================
   // 5. シラバスボタンを押したときの処理
   // =========================
-  function handleSyllabusClick(subjectElement) {
+  async function handleSyllabusClick(subjectElement, button) {
     const courseCodes = extractCourseCodes(subjectElement);
-    const courseName = getCourseName(subjectElement);
 
     if (courseCodes.length === 0) {
       alert("授業コードを取得できませんでした。");
@@ -116,13 +164,25 @@
       return;
     }
 
-    // いったん確認用
-    alert(`授業コード: ${courseCodes.join(", ")}\n` + `授業名: ${courseName}`);
+    const code = courseCodes[0];
+    const originalText = button.textContent;
+    button.textContent = "取得中...";
+    button.disabled = true;
 
-    // 次の段階でここにシラバスページを開く処理を書く
-    // 例:
-    // const url = `https://シラバス検索URL?code=${courseCodes[0]}`;
-    // window.open(url, '_blank');
+    try {
+      const syllabusUrl = await convertCodeToSyllabusUrl(code);
+      if (syllabusUrl) {
+        window.open(syllabusUrl, "_blank");
+      } else {
+        alert("シラバスURLが見つかりませんでした。");
+      }
+    } catch (error) {
+      console.error("シラバスURL取得エラー:", error);
+      alert("シラバス取得中にエラーが発生しました。");
+    } finally {
+      button.textContent = originalText;
+      button.disabled = false;
+    }
   }
 
   // =========================
@@ -143,29 +203,23 @@
         event.preventDefault();
         event.stopPropagation();
 
-        handleSyllabusClick(subjectElement);
+        handleSyllabusClick(subjectElement, button);
       });
 
-      // wrapperを作って中央寄せする
       const buttonWrap = document.createElement("div");
       buttonWrap.classList.add(BUTTON_WRAP_CLASS);
       buttonWrap.appendChild(button);
 
       subjectElement.appendChild(buttonWrap);
-
-      // 二重追加防止
       subjectElement.setAttribute(ADDED_ATTR, "true");
     }
   }
 
   // =========================
-  // 7. 初回実行
+  // 7. 初回実行と監視
   // =========================
   addButtons();
 
-  // =========================
-  // 8. Moodleの動的読み込みに対応
-  // =========================
   const observer = new MutationObserver(() => {
     addButtons();
   });
