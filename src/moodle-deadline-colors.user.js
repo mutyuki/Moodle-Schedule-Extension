@@ -43,6 +43,73 @@
         display: none !important;
       }
 
+      /* 並べ替えボタンとその親ラッパー（余白用 .me-auto）を完全に非表示にする */
+      .block_timeline div:has(> [data-region="view-selector"]) {
+        display: none !important;
+      }
+
+      /* フィルター・検索窓の並びを常に横並びに固定（折り返し防止） */
+      .block_timeline [data-region="timeline"] > div:first-child .row.g-0 {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+
+      .block_timeline [data-region="timeline"] > div:first-child .row.g-0 > div {
+        margin: 0 !important;
+        width: auto !important;
+        flex: none !important;
+      }
+
+      .block_timeline .nav-search {
+        flex: 1 !important;
+        min-width: 0 !important;
+      }
+
+      .block_timeline .nav-search input {
+        width: 100% !important;
+      }
+
+      .block_timeline .row.g-0 + .border-bottom {
+        display: none !important;
+      }
+
+      /* コントロール内の各種フォーム要素の余計なマージンをリセットして縦方向のズレを防ぐ */
+      .block_timeline [data-region="timeline"] > div:first-child .row.g-0 * {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      /* 画面幅が480px以上のときのみヘッダーの右側に絶対配置 */
+      @media (min-width: 480px) {
+        .block_timeline .card-body {
+          position: relative !important;
+          padding-top: 48px !important;
+        }
+
+        .block_timeline .card-title {
+          position: absolute !important;
+          top: 16px !important;
+          left: 16px !important;
+          margin: 0 !important;
+          line-height: 1 !important;
+        }
+
+        .block_timeline [data-region="timeline"] > div:first-child {
+          position: absolute !important;
+          top: 6px !important;
+          right: 16px !important;
+          left: 130px !important; /* タイトルのすぐ右から配置を開始して横幅を確保 */
+          padding: 0 !important;
+          z-index: 10 !important;
+        }
+
+        .block_timeline [data-region="timeline"] > div:first-child .row.g-0 {
+          justify-content: flex-end !important;
+        }
+      }
+
       /* 日付と時間を縦に並べるコンテナ */
       .rits-datetime-container {
         display: flex !important;
@@ -77,6 +144,7 @@
         flex-wrap: nowrap !important;
         align-items: center !important;
         width: 100% !important;
+        min-width: 0 !important;
       }
 
       .timeline-name {
@@ -136,6 +204,7 @@
         margin: 0 !important;
         padding: 0 !important;
         line-height: 1.35 !important;
+        min-width: 0 !important;
       }
 
       .event-name a {
@@ -144,6 +213,7 @@
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
         overflow: hidden !important;
+        min-width: 0 !important;
       }
       .event-name a:hover {
         color: hsl(356, 75%, 40%) !important;
@@ -175,6 +245,7 @@
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
         overflow: hidden !important;
+        min-width: 0 !important;
       }
 
       /* 右側のアクションボタンのコンパクト化 */

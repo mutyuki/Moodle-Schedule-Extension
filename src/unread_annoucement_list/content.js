@@ -2,12 +2,32 @@
   if (!window.location.pathname.startsWith("/my")) return;
 
   function initLayout() {
+    const mainGrid = document.getElementById("rits-main-grid");
+    const leftCol = document.getElementById("rits-left-col");
+    const rightCol = document.getElementById("rits-right-col");
+    const announcePanel = document.getElementById("rits-announce-panel");
     const timetableBlock = document.querySelector(
       '[data-block="rutime_table"], .block_rutime_table',
     );
     const timelineBlock = document.querySelector(
       '[data-block="timeline"], .block_timeline, .block-timeline',
     );
+
+    // すでにカスタムレイアウトの構築が完全に終わっている場合は即座にスキップ（負荷削減）
+    if (
+      mainGrid &&
+      leftCol &&
+      rightCol &&
+      announcePanel &&
+      timetableBlock &&
+      timelineBlock &&
+      timelineBlock.parentNode === leftCol &&
+      announcePanel.parentNode === leftCol &&
+      timetableBlock.parentNode === rightCol &&
+      timetableBlock.querySelector(".rits-timetable-header-wrap")
+    ) {
+      return;
+    }
 
     if (timetableBlock && timelineBlock) {
       const contentRegion = document.querySelector('[data-blockregion="content"]');
@@ -63,6 +83,31 @@
 
       wrapTimetableIcons(timetableBlock);
       cleanClassroomLabels(timetableBlock);
+      adjustTimetableHeader(timetableBlock);
+    }
+  }
+
+  function adjustTimetableHeader(timetableBlock) {
+    const titleEl = timetableBlock.querySelector(".card-title, h3, h5, h6");
+    if (titleEl?.textContent.includes("My時間割表")) {
+      titleEl.textContent = "時間割表";
+    }
+
+    const legend = timetableBlock.querySelector(".timetable-legend");
+    const cardBody = timetableBlock.querySelector(".card-body");
+    if (legend && titleEl && cardBody) {
+      let headerWrap = timetableBlock.querySelector(".rits-timetable-header-wrap");
+      if (!headerWrap) {
+        headerWrap = document.createElement("div");
+        headerWrap.className = "rits-timetable-header-wrap";
+        titleEl.parentNode.insertBefore(headerWrap, titleEl);
+      }
+      if (titleEl.parentNode !== headerWrap) {
+        headerWrap.appendChild(titleEl);
+      }
+      if (legend.parentNode !== headerWrap) {
+        headerWrap.appendChild(legend);
+      }
     }
   }
 
@@ -288,9 +333,15 @@
     }
   }
 
-  // Moodleの非同期描画に対応するためのMutationObserver
+  // Moodleの非同期描画に対応するためのMutationObserver (リサイズや連続DOM変化時の負荷を防ぐため防振処理を追加)
+  let scheduled = false;
   const observer = new MutationObserver(() => {
-    initLayout();
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      initLayout();
+    });
   });
 
   // 初回実行と監視開始

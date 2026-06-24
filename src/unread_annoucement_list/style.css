@@ -262,6 +262,7 @@ body.limitedwidth #region-main,
   #rits-main-grid {
     flex-direction: column;
     gap: 0;
+    width: 100% !important;
   }
   #rits-left-col,
   #rits-right-col {
@@ -273,13 +274,19 @@ body.limitedwidth #region-main,
   #rits-main-grid .block_timeline,
   #rits-main-grid .block-timeline {
     order: 1;
+    min-width: 0 !important;
+    width: 100% !important;
   }
   #rits-main-grid [data-block="rutime_table"],
   #rits-main-grid .block_rutime_table {
     order: 2;
+    min-width: 0 !important;
+    width: 100% !important;
   }
   #rits-main-grid #rits-announce-panel {
     order: 3;
+    min-width: 0 !important;
+    width: 100% !important;
   }
 }
 

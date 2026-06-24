@@ -22,6 +22,7 @@
 .block_rutime_table .card-body {
   padding-left: 0 !important;
   padding-right: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* タイトルと凡例のみ左右の余白を維持 */
@@ -213,23 +214,63 @@
   object-fit: contain !important;
 }
 
-/* 11. 凡例セクションの美化 */
+/* 11. 凡例（インジケーター）セクションの美化とヘッダー横への配置 */
+.block_rutime_table .rits-timetable-header-wrap {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 10px 16px 4px 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* タイトルのスタイル調整 */
+.block_rutime_table .card-title {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  line-height: 1.2 !important;
+}
+
+/* 凡例（インジケーター）ボックスのスタイル調整（元の枠線と背景色を維持） */
 .block_rutime_table .timetable-legend {
-  margin-left: 12px !important;
-  margin-right: 12px !important;
-  margin-bottom: 16px !important;
+  margin: 0 !important;
   background-color: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 6px !important;
-  padding: 8px 12px !important;
+  padding: 6px 12px !important;
+  flex-shrink: 0 !important;
 }
 
 .block_rutime_table .legend-container {
   display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 12px 24px !important;
-  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
   align-items: center !important;
+}
+
+/* 画面幅が狭いときのレスポンシブ対応 */
+@media (max-width: 576px) {
+  .block_rutime_table .rits-timetable-header-wrap {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 12px 16px 12px 16px !important;
+  }
+
+  .block_rutime_table .timetable-legend {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 8px 12px !important;
+  }
+
+  .block_rutime_table .legend-container {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px 24px !important;
+  }
 }
 
 .block_rutime_table .legend-item {
