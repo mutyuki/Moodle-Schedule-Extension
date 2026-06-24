@@ -29,48 +29,193 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
+      /* タイムライン全体のコンテナの余白削減 */
+      .block_timeline [data-region="event-list-content"] {
+        padding: 0 !important;
+      }
+      .block_timeline .list-group-item {
+        border: none !important;
+        background: transparent !important;
+      }
+      
+      /* 元の日付ヘッダーを非表示にする (各行に日付を表示するため) */
+      [data-region="event-list-content-date"] {
+        display: none !important;
+      }
+
+      /* 日付と時間を縦に並べるコンテナ */
+      .rits-datetime-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        min-width: 68px !important;
+        margin-right: 4px !important;
+        flex-shrink: 0 !important;
+      }
+      .rits-timeline-date {
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
+        line-height: 1.25 !important;
+        letter-spacing: 0.02em !important;
+      }
+
+      /* 各イベントカード (一列のコンパクトな構成) */
       .moodle-deadline-event {
-        border-left: 6px solid var(--deadline-color) !important;
+        border-left: 4px solid var(--deadline-color) !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-left-width: 4px !important;
+        padding: 8px 12px !important;
+        margin-bottom: 5px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+      }
+
+      .moodle-deadline-event .d-flex.flex-wrap {
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+
+      .timeline-name {
+        display: flex !important;
+        flex: 1 !important;
+        align-items: center !important;
+        min-width: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      /* イベント時間 */
+      .timeline-name small.text-end {
+        color: #64748b !important;
+        font-weight: 500 !important;
+        font-size: 0.72rem !important;
+        line-height: 1.25 !important;
+        margin-top: 1px !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        text-align: right !important;
+      }
+
+      /* アイコンコンテナ */
+      .activityiconcontainer.courseicon {
+        margin: 0 10px !important;
+        width: 24px !important;
+        height: 24px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #f1f5f9 !important;
         border-radius: 6px !important;
-        background: color-mix(in srgb, var(--deadline-color) 10%, white) !important;
-        padding-left: 10px !important;
+        flex-shrink: 0 !important;
+      }
+      .activityiconcontainer.courseicon img.icon {
+        width: 14px !important;
+        height: 14px !important;
+        margin: 0 !important;
+      }
+
+      .event-name-container {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+      }
+
+      .event-name {
+        display: flex !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        font-size: 0.83rem !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.35 !important;
+      }
+
+      .event-name a {
+        color: #1e293b !important;
+        text-decoration: none !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+      }
+      .event-name a:hover {
+        color: hsl(356, 75%, 40%) !important;
+        text-decoration: underline !important;
       }
 
       .moodle-deadline-badge {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         flex-shrink: 0;
-        margin-left: 8px;
-        border-radius: 999px;
-        background: var(--deadline-color);
-        color: white;
-        font-size: 12px;
-        font-weight: 700;
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--deadline-color) 8%, #ffffff);
+        color: var(--deadline-color);
+        border: 1px solid color-mix(in srgb, var(--deadline-color) 20%, transparent);
+        font-size: 10px;
+        font-weight: 600;
         line-height: 1;
-        padding: 5px 8px;
+        padding: 2px 6px;
         vertical-align: middle;
+        letter-spacing: 0.02em;
       }
 
-      .moodle-deadline-event .text-truncate,
-      .moodle-deadline-event [data-region="event-name"],
-      .moodle-deadline-event .eventname,
-      .moodle-deadline-event h3,
-      .moodle-deadline-event h4,
-      .moodle-deadline-event h5,
-      .moodle-deadline-event h6,
-      .moodle-deadline-event a {
-        max-width: none !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        white-space: normal !important;
-        word-break: break-word !important;
+      /* 科目情報と提出期限の重複文字削除後のCSS調整 */
+      .event-name-container small.mb-0 {
+        color: #64748b !important;
+        font-size: 0.72rem !important;
+        font-weight: 500 !important;
+        margin-top: 2px !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
       }
 
-      .moodle-deadline-overdue { --deadline-color: #b3261e; }
-      .moodle-deadline-today { --deadline-color: #d93025; }
-      .moodle-deadline-soon { --deadline-color: #d93025; }
-      .moodle-deadline-week { --deadline-color: #d6a700; }
-      .moodle-deadline-later { --deadline-color: #137333; }
-      .moodle-deadline-unknown { --deadline-color: #6c757d; }
+      /* 右側のアクションボタンのコンパクト化 */
+      .timeline-action-button {
+        margin-left: 12px !important;
+        align-self: center !important;
+        margin-bottom: 0 !important;
+        flex-shrink: 0 !important;
+      }
+      .timeline-action-button h6.event-action {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .timeline-action-button a.btn {
+        font-size: 11px !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+        background-color: #f8fafc !important;
+        transition: all 0.2s ease !important;
+        font-weight: 600 !important;
+      }
+      .timeline-action-button a.btn:hover {
+        background-color: hsl(356, 75%, 40%) !important;
+        color: #ffffff !important;
+        border-color: hsl(356, 75%, 35%) !important;
+        box-shadow: 0 2px 6px rgba(184, 29, 36, 0.15) !important;
+      }
+
+      /* 無駄なボーダー線の削除 */
+      .moodle-deadline-event .border-bottom {
+        display: none !important;
+      }
+
+      .moodle-deadline-overdue { --deadline-color: #dc2626; }
+      .moodle-deadline-today { --deadline-color: #f43f5e; }
+      .moodle-deadline-soon { --deadline-color: #ea580c; }
+      .moodle-deadline-week { --deadline-color: #d97706; }
+      .moodle-deadline-later { --deadline-color: #059669; }
+      .moodle-deadline-unknown { --deadline-color: #64748b; }
     `;
     document.head.append(style);
   }
@@ -211,7 +356,93 @@
     return null;
   }
 
+  function cleanEventText(event) {
+    const small = event.querySelector(".event-name-container small, .timeline-name small.mb-0");
+    if (small && !small.dataset.cleaned) {
+      const text = small.textContent;
+      const separator = text.includes("·") ? "·" : text.includes("・") ? "・" : null;
+      if (separator) {
+        const parts = text.split(separator);
+        if (parts.length > 1) {
+          small.textContent = parts[parts.length - 1].trim();
+        }
+      }
+      small.dataset.cleaned = "true";
+    }
+  }
+
+  function findDateText(event) {
+    let node = event;
+    while (node?.parentElement) {
+      let sibling = node.previousElementSibling;
+      while (sibling) {
+        if (sibling.matches('[data-region="event-list-content-date"]')) {
+          return sibling.textContent.trim();
+        }
+        sibling = sibling.previousElementSibling;
+      }
+      node = node.parentElement;
+      if (node.matches(TIMELINE_SELECTORS.join(","))) {
+        break;
+      }
+    }
+    return null;
+  }
+
+  function formatCompactDate(dateText) {
+    if (!dateText) return "";
+    const match = dateText.match(/(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日\((.+?)\)/);
+    if (match) {
+      const [, , month, day, weekday] = match;
+      const shortWeekday = weekday.charAt(0); // "月曜日" -> "月"
+      return `${Number(month)}/${Number(day)} (${shortWeekday})`;
+    }
+    const matchNoWeekday = dateText.match(/(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/);
+    if (matchNoWeekday) {
+      const [, , month, day] = matchNoWeekday;
+      return `${Number(month)}/${Number(day)}`;
+    }
+    return dateText;
+  }
+
+  function insertDateLabel(event) {
+    if (event.querySelector(".rits-timeline-date")) {
+      return;
+    }
+    const rawDate = findDateText(event);
+    const compactDate = formatCompactDate(rawDate);
+    if (!compactDate) return;
+
+    const timeEl = event.querySelector(".timeline-name small.text-end");
+    if (timeEl) {
+      const dateSpan = document.createElement("span");
+      dateSpan.className = "rits-timeline-date";
+      dateSpan.textContent = compactDate;
+
+      const dateTimeContainer = document.createElement("div");
+      dateTimeContainer.className = "rits-datetime-container";
+
+      timeEl.parentNode.insertBefore(dateTimeContainer, timeEl);
+      dateTimeContainer.appendChild(dateSpan);
+      dateTimeContainer.appendChild(timeEl);
+    }
+  }
+
+  function cleanActionButton(event) {
+    const actionLink = event.querySelector(".timeline-action-button a");
+    if (actionLink && !actionLink.dataset.textCleaned) {
+      const text = actionLink.textContent.trim();
+      if (text.includes("提出をアップロード") || text.includes("提出を入力")) {
+        actionLink.textContent = "提出";
+      }
+      actionLink.dataset.textCleaned = "true";
+    }
+  }
+
   function decorateEvent(event) {
+    insertDateLabel(event);
+    cleanEventText(event);
+    cleanActionButton(event);
     const deadline = findDeadline(event);
     const existingBadge = event.querySelector(".moodle-deadline-badge");
     const state = deadline
