@@ -321,7 +321,7 @@
   function getDeadlineState(deadline) {
     const remainingMs = deadline.getTime() - Date.now();
     const remainingMinutes = Math.ceil(remainingMs / 60_000);
-    const days = Math.round((deadline - startOfToday()) / 86_400_000);
+    const days = Math.floor((deadline - startOfToday()) / 86_400_000);
 
     if (remainingMs < 0) {
       const overdueMinutes = Math.floor(Math.abs(remainingMs) / 60_000);
@@ -401,30 +401,47 @@
     }
 
     const ownDate = parseDate(event.textContent);
-    if (ownDate) {
-      return ownDate;
-    }
+    let date = ownDate;
 
-    let node = event;
+    if (!date) {
+      let node = event;
 
-    while (node?.parentElement) {
-      let sibling = node.previousElementSibling;
+      while (node?.parentElement) {
+        let sibling = node.previousElementSibling;
 
-      while (sibling) {
-        const date = parseDate(sibling.textContent);
-        if (date) {
-          return date;
+        while (sibling) {
+          const d = parseDate(sibling.textContent);
+          if (d) {
+            date = d;
+            break;
+          }
+          sibling = sibling.previousElementSibling;
         }
-        sibling = sibling.previousElementSibling;
-      }
+        if (date) {
+          break;
+        }
 
-      node = node.parentElement;
-      if (node.matches(TIMELINE_SELECTORS.join(","))) {
-        break;
+        node = node.parentElement;
+        if (node.matches(TIMELINE_SELECTORS.join(","))) {
+          break;
+        }
       }
     }
 
-    return null;
+    if (date) {
+      const timeEl =
+        event.querySelector(".timeline-name small.text-end") ||
+        event.querySelector("small.text-end");
+      if (timeEl) {
+        const timeMatch = timeEl.textContent.match(/(\d{1,2}):(\d{2})/);
+        if (timeMatch) {
+          const [, hours, minutes] = timeMatch;
+          date.setHours(Number(hours), Number(minutes), 0, 0);
+        }
+      }
+    }
+
+    return date;
   }
 
   function cleanEventText(event) {
