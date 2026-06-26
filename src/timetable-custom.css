@@ -143,11 +143,11 @@
 /* 9. 時限列（一番左 of 列）のサイズ・位置調整 */
 .block_rutime_table table.timetable td.time,
 .block_rutime_table table.timetable th:first-child {
-  width: 36px !important;
-  min-width: 36px !important;
-  max-width: 36px !important;
-  padding-left: 4px !important;
-  padding-right: 4px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
   text-align: center !important;
 }
 
