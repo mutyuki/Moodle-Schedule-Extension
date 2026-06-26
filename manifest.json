@@ -11,7 +11,11 @@
   "content_scripts": [
     {
       "matches": ["https://lms.ritsumei.ac.jp/my/", "https://lms.ritsumei.ac.jp/my/index.php"],
-      "js": ["src/unread_annoucement_list/content.js", "src/moodle-deadline-colors.user.js"],
+      "js": [
+        "src/unread_annoucement_list/content.js",
+        "src/timetable-period-times/content.js",
+        "src/moodle-deadline-colors.user.js"
+      ],
       "css": ["src/unread_annoucement_list/style.css", "src/timetable-custom.css"],
       "run_at": "document_idle"
     },
