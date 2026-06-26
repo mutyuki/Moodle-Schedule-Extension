@@ -33,6 +33,13 @@
       .block_timeline [data-region="event-list-content"] {
         padding: 0 !important;
       }
+      .block_timeline [data-region="event-list-wrapper"] {
+        padding-bottom: 0 !important;
+      }
+      .block_timeline [data-region="more-events-button-container"] {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
       .block_timeline .list-group-item {
         border: none !important;
         background: transparent !important;

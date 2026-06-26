@@ -20,9 +20,11 @@
     style.textContent = `
         .block_rutime_table table.timetable td.time,
         .block_rutime_table table.timetable th:first-child {
-          width: 58px !important;
-          min-width: 58px !important;
-          max-width: 58px !important;
+          width: 48px !important;
+          min-width: 48px !important;
+          max-width: 48px !important;
+          padding-left: 2px !important;
+          padding-right: 2px !important;
         }
 
         .block_rutime_table table.timetable td.time .rits-period-time-label {
@@ -30,20 +32,20 @@
           flex-direction: column !important;
           align-items: center !important;
           justify-content: center !important;
-          gap: 2px !important;
+          gap: 1px !important;
           line-height: 1 !important;
           white-space: nowrap !important;
         }
 
         .block_rutime_table table.timetable td.time .rits-period-number {
-          font-size: 14px !important;
+          font-size: 13px !important;
           font-weight: 700 !important;
           color: #475569 !important;
-          margin-bottom: 4px !important;
+          margin-bottom: 2px !important;
         }
 
         .block_rutime_table table.timetable td.time .rits-period-clock {
-          font-size: 11px !important;
+          font-size: 10px !important;
           font-weight: 700 !important;
           color: #64748b !important;
           letter-spacing: 0 !important;
@@ -51,7 +53,7 @@
 
         .block_rutime_table table.timetable td.time .rits-period-separator {
           width: 2px !important;
-          height: 12px !important;
+          height: 10px !important;
           background: #64748b !important;
           border-radius: 999px !important;
           margin: 1px 0 !important;
