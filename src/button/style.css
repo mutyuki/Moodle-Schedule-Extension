@@ -2,3 +2,8 @@
 .drawer-toggler.drawer-right-toggle {
   display: none !important;
 }
+
+/* Hides the footer popover button from the site */
+.btn-footer-popover[data-action="footer-popover"] {
+  display: none !important;
+}
