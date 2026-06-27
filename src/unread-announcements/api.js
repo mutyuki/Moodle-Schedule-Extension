@@ -20,60 +20,65 @@
   // ============================================================
   // コースページからアナウンスフォーラムIDを取得
   // ============================================================
-  function getAnnouncementForumId(courseId) {
-    return fetch(`/course/view.php?id=${courseId}`)
-      .then((r) => r.text())
-      .then((html) => {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        const links = doc.querySelectorAll('a[href*="forum/view.php"]');
-        for (let i = 0; i < links.length; i++) {
-          const t = links[i].textContent.trim();
-          if (
-            t.indexOf("\u30A2\u30CA\u30A6\u30F3") >= 0 ||
-            t.indexOf("\u30CB\u30E5\u30FC\u30B9") >= 0 ||
-            t.indexOf("\u304A\u77E5\u3089\u305B") >= 0
-          ) {
-            const m = links[i].href.match(/[?&]id=(\d+)/);
-            if (m) return m[1];
-          }
+  async function getAnnouncementForumId(courseId) {
+    try {
+      const res = await fetch(`/course/view.php?id=${courseId}`);
+      if (!res.ok) return null;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const links = doc.querySelectorAll('a[href*="forum/view.php"]');
+      for (let i = 0; i < links.length; i++) {
+        const t = links[i].textContent.trim();
+        if (
+          t.indexOf("\u30A2\u30CA\u30A6\u30F3") >= 0 ||
+          t.indexOf("\u30CB\u30E5\u30FC\u30B9") >= 0 ||
+          t.indexOf("\u304A\u77E5\u3089\u305B") >= 0
+        ) {
+          const m = links[i].href.match(/[?&]id=(\d+)/);
+          if (m) return m[1];
         }
-        return null;
-      })
-      .catch(() => null);
+      }
+    } catch (error) {
+      console.error(`Failed to get announcement forum ID for course ${courseId}:`, error);
+    }
+    return null;
   }
 
   // ============================================================
   // フォーラムから未読投稿一覧を取得
   // ============================================================
-  function getUnreadPosts(forumId) {
-    return fetch(`/mod/forum/view.php?id=${forumId}`)
-      .then((r) => r.text())
-      .then((html) => {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        const posts = [];
-        for (const tr of doc.querySelectorAll("tr.hasunread")) {
-          let title = "";
-          let href = "";
-          let date = "";
-          for (const a of tr.querySelectorAll("a")) {
-            const h = a.href || "";
-            const t = a.textContent.trim();
-            if (
-              h.indexOf("discuss.php") >= 0 &&
-              h.indexOf("parent=") < 0 &&
-              h.indexOf("#unread") < 0 &&
-              t
-            ) {
-              title = t;
-              href = h;
-            }
-            if (h.indexOf("parent=") >= 0 && t) date = t;
+  async function getUnreadPosts(forumId) {
+    try {
+      const res = await fetch(`/mod/forum/view.php?id=${forumId}`);
+      if (!res.ok) return [];
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const posts = [];
+      for (const tr of doc.querySelectorAll("tr.hasunread")) {
+        let title = "";
+        let href = "";
+        let date = "";
+        for (const a of tr.querySelectorAll("a")) {
+          const h = a.href || "";
+          const t = a.textContent.trim();
+          if (
+            h.indexOf("discuss.php") >= 0 &&
+            h.indexOf("parent=") < 0 &&
+            h.indexOf("#unread") < 0 &&
+            t
+          ) {
+            title = t;
+            href = h;
           }
-          if (title && href) posts.push({ title: title, href: href, date: date });
+          if (h.indexOf("parent=") >= 0 && t) date = t;
         }
-        return posts;
-      })
-      .catch(() => []);
+        if (title && href) posts.push({ title: title, href: href, date: date });
+      }
+      return posts;
+    } catch (error) {
+      console.error(`Failed to get unread posts for forum ${forumId}:`, error);
+      return [];
+    }
   }
 
   // ============================================================
@@ -118,7 +123,7 @@
   // ============================================================
   // 未読アナウンス読み込みメイン（キャッシュ付き）
   // ============================================================
-  function loadUnreadAnnouncements() {
+  async function loadUnreadAnnouncements() {
     const panelBody = document.querySelector("#rits-announce-panel .rits-panel-body");
     if (!panelBody) return;
     panelBody.innerHTML =
@@ -136,37 +141,28 @@
 
     const courses = getCourseList();
     const allResults = [];
-    let idx = 0;
 
-    function processNext() {
-      if (idx >= courses.length) {
-        try {
-          sessionStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify({ timestamp: Date.now(), data: allResults }),
-          );
-        } catch (e) {}
-        renderAnnouncements(panelBody, allResults);
-        return;
+    for (const course of courses) {
+      try {
+        const forumId = await getAnnouncementForumId(course.id);
+        if (!forumId) continue;
+        const posts = await getUnreadPosts(forumId);
+        if (posts && posts.length > 0) {
+          allResults.push({ course: course, posts: posts });
+        }
+      } catch (error) {
+        console.error(`Failed to load announcements for course ${course.id}:`, error);
       }
-      const course = courses[idx++];
-      getAnnouncementForumId(course.id)
-        .then((forumId) => {
-          if (!forumId) {
-            processNext();
-            return Promise.resolve([]);
-          }
-          return getUnreadPosts(forumId);
-        })
-        .then((posts) => {
-          if (posts && posts.length > 0) allResults.push({ course: course, posts: posts });
-          processNext();
-        })
-        .catch(() => {
-          processNext();
-        });
     }
-    processNext();
+
+    try {
+      sessionStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({ timestamp: Date.now(), data: allResults }),
+      );
+    } catch (e) {}
+
+    renderAnnouncements(panelBody, allResults);
   }
 
   // グローバルオブジェクトに登録して他ファイルから参照可能にする
