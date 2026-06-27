@@ -6,16 +6,24 @@
       return cachedUrl;
     }
 
-    const res = await fetch(
-      `https://withered-salad-b4aa.yudai-syllabus.workers.dev/syllabus?code=${code}`,
-    );
+    try {
+      const res = await fetch(
+        `https://withered-salad-b4aa.yudai-syllabus.workers.dev/syllabus?code=${code}`,
+      );
 
-    const syllabusUrl = await res.text();
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
 
-    if (syllabusUrl?.startsWith("https://")) {
-      await window.RitsSyllabusButton.saveCachedSyllabusUrl(code, syllabusUrl);
-      console.log(`[API] ${code}: ${syllabusUrl}`);
-      return syllabusUrl;
+      const syllabusUrl = await res.text();
+
+      if (syllabusUrl?.startsWith("https://")) {
+        await window.RitsSyllabusButton.saveCachedSyllabusUrl(code, syllabusUrl);
+        console.log(`[API] ${code}: ${syllabusUrl}`);
+        return syllabusUrl;
+      }
+    } catch (error) {
+      console.error("シラバスURLの取得に失敗しました:", error);
     }
 
     return null;
