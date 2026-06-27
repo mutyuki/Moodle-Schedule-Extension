@@ -73,13 +73,6 @@
       button.title = "この授業のシラバスを開く";
       button.setAttribute("aria-label", "この授業のシラバスを開く");
 
-      button.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        handleSyllabusClick(subjectElement, button);
-      });
-
       const buttonWrap = document.createElement("div");
       buttonWrap.classList.add(BUTTON_WRAP_CLASS);
       buttonWrap.appendChild(button);
@@ -88,6 +81,20 @@
       subjectElement.setAttribute(ADDED_ATTR, "true");
     }
   }
+
+  // イベントデリゲーション：ドキュメント全体でシラバスボタンのクリックを一括監視
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(`.${BUTTON_CLASS}`);
+    if (!button) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const subjectElement = button.closest(".subject");
+    if (subjectElement) {
+      handleSyllabusClick(subjectElement, button);
+    }
+  });
 
   // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsSyllabusButton = window.RitsSyllabusButton || {};
