@@ -7,10 +7,10 @@
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
-      window.RitsTimetablePeriodTimes.decoratePeriodCells();
+      window.RitsTimetablePeriodTimes.decorateTimetable();
     });
   });
 
-  window.RitsTimetablePeriodTimes.decoratePeriodCells();
+  window.RitsTimetablePeriodTimes.decorateTimetable();
   observer.observe(document.body, { childList: true, subtree: true });
 })();

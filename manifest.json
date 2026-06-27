@@ -14,15 +14,16 @@
       "js": [
         "src/unread-announcements/dom.js",
         "src/unread-announcements/api.js",
-        "src/unread-announcements/content.js",
         "src/timetable/dom.js",
         "src/timetable/content.js",
         "src/timeline/utils.js",
         "src/timeline/dom.js",
-        "src/timeline/content.js"
+        "src/timeline/content.js",
+        "src/dashboard-layout/dom.js",
+        "src/dashboard-layout/content.js"
       ],
       "css": [
-        "src/dashboard-layout.css",
+        "src/dashboard-layout/style.css",
         "src/unread-announcements/style.css",
         "src/timetable/style.css",
         "src/timeline/style.css"

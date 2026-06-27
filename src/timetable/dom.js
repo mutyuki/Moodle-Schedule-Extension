@@ -51,6 +51,78 @@
     }
   }
 
+  function adjustTimetableHeader(timetableBlock) {
+    const titleEl = timetableBlock.querySelector(".card-title, h3, h5, h6");
+    if (titleEl?.textContent.includes("My時間割表")) {
+      titleEl.textContent = "時間割表";
+    }
+
+    const legend = timetableBlock.querySelector(".timetable-legend");
+    const cardBody = timetableBlock.querySelector(".card-body");
+    if (legend && titleEl && cardBody) {
+      let headerWrap = timetableBlock.querySelector(".rits-timetable-header-wrap");
+      if (!headerWrap) {
+        headerWrap = document.createElement("div");
+        headerWrap.className = "rits-timetable-header-wrap";
+        titleEl.parentNode.insertBefore(headerWrap, titleEl);
+      }
+      if (titleEl.parentNode !== headerWrap) {
+        headerWrap.appendChild(titleEl);
+      }
+      if (legend.parentNode !== headerWrap) {
+        headerWrap.appendChild(legend);
+      }
+    }
+  }
+
+  function wrapTimetableIcons(timetableBlock) {
+    const subjects = timetableBlock.querySelectorAll(".subject");
+    for (const subject of subjects) {
+      if (subject.querySelector(".rits-icons-container")) continue;
+
+      const spans = Array.from(subject.querySelectorAll("span.on, span.off"));
+      if (spans.length === 0) continue;
+
+      const container = document.createElement("div");
+      container.className = "rits-icons-container";
+
+      const firstSpan = spans[0];
+      firstSpan.parentNode.insertBefore(container, firstSpan);
+
+      for (const span of spans) {
+        container.appendChild(span);
+      }
+
+      const brs = subject.querySelectorAll("br");
+      for (const br of brs) {
+        br.remove();
+      }
+    }
+  }
+
+  function cleanClassroomLabels(timetableBlock) {
+    const rooms = timetableBlock.querySelectorAll(".subject .room:not([data-room-cleaned])");
+    for (const room of rooms) {
+      const text = room.textContent.trim();
+      const cleaned = text.replace(/^[月火水木金土日]\d+[:：]\s*/, "");
+      room.textContent = cleaned;
+      room.setAttribute("data-room-cleaned", "true");
+    }
+  }
+
+  function decorateTimetable() {
+    const timetableBlock = document.querySelector(
+      '[data-block="rutime_table"], .block_rutime_table',
+    );
+    if (!timetableBlock) return;
+
+    decoratePeriodCells();
+    wrapTimetableIcons(timetableBlock);
+    cleanClassroomLabels(timetableBlock);
+    adjustTimetableHeader(timetableBlock);
+  }
+
   window.RitsTimetablePeriodTimes = window.RitsTimetablePeriodTimes || {};
   window.RitsTimetablePeriodTimes.decoratePeriodCells = decoratePeriodCells;
+  window.RitsTimetablePeriodTimes.decorateTimetable = decorateTimetable;
 })();
