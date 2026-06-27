@@ -51,7 +51,6 @@
     }
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsTimetablePeriodTimes = window.RitsTimetablePeriodTimes || {};
   window.RitsTimetablePeriodTimes.decoratePeriodCells = decoratePeriodCells;
 })();

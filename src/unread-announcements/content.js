@@ -12,7 +12,6 @@
     });
   });
 
-  // 初回実行と監視開始
   window.RitsUnreadAnnouncementList.initLayout();
   observer.observe(document.body, { childList: true, subtree: true });
 })();

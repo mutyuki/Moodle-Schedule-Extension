@@ -1,5 +1,5 @@
 (() => {
-  const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7日間
+  const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
   function createCacheKey(code) {
     return `syllabus:${code}`;
@@ -43,7 +43,6 @@
     }
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsSyllabusButton = window.RitsSyllabusButton || {};
   window.RitsSyllabusButton.getCachedSyllabusUrl = getCachedSyllabusUrl;
   window.RitsSyllabusButton.saveCachedSyllabusUrl = saveCachedSyllabusUrl;

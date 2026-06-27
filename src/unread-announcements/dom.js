@@ -58,7 +58,6 @@
         announcePanel = createAnnouncePanel();
         leftCol.appendChild(announcePanel);
 
-        // 更新ボタンイベント
         const refreshBtn = announcePanel.querySelector("#rits-refresh-btn");
         if (refreshBtn) {
           refreshBtn.addEventListener("click", () => {
@@ -155,7 +154,6 @@
     }
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsUnreadAnnouncementList = window.RitsUnreadAnnouncementList || {};
   window.RitsUnreadAnnouncementList.initLayout = initLayout;
 })();

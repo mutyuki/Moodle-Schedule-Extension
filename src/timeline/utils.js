@@ -1,10 +1,10 @@
 (() => {
   const DATE_PATTERN = /(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/;
 
-  const MS_PER_MINUTE = 60_000; // 60 * 1000
-  const MS_PER_DAY = 86_400_000; // 24 * 60 * 60 * 1000
+  const MS_PER_MINUTE = 60_000;
+  const MS_PER_DAY = 86_400_000;
   const MINUTES_PER_HOUR = 60;
-  const MINUTES_PER_DAY = 1440; // 24 * 60
+  const MINUTES_PER_DAY = 1440;
 
   function parseDate(text) {
     const match = text.match(DATE_PATTERN);
@@ -82,7 +82,6 @@
     return { className: "moodle-deadline-later", label: `期限まで${days}日` };
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsMoodleDeadlineColors = window.RitsMoodleDeadlineColors || {};
   window.RitsMoodleDeadlineColors.parseDate = parseDate;
   window.RitsMoodleDeadlineColors.parseDateTimeElement = parseDateTimeElement;

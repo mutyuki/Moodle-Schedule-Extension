@@ -3,9 +3,6 @@
   const BUTTON_WRAP_CLASS = "my-syllabus-btn-wrap";
   const ADDED_ATTR = "data-syllabus-button-added";
 
-  // =========================
-  // 2. 授業情報の文字列を取得
-  // =========================
   function getSubjectText(subjectElement) {
     const clone = subjectElement.cloneNode(true);
 
@@ -17,18 +14,12 @@
     return clone.textContent.replace(/\s+/g, " ").trim();
   }
 
-  // =========================
-  // 3. 授業コードを抽出
-  // =========================
   function extractCourseCodes(subjectElement) {
     const text = getSubjectText(subjectElement);
     const matches = [...text.matchAll(/(?:^|[^\d])(\d{5})(?=\s*[:：])/g)];
     return matches.map((match) => match[1]);
   }
 
-  // =========================
-  // 5. シラバスボタンを押したときの処理
-  // =========================
   async function handleSyllabusClick(subjectElement, button) {
     const courseCodes = extractCourseCodes(subjectElement);
 
@@ -59,9 +50,6 @@
     }
   }
 
-  // =========================
-  // 6. ボタンを追加する処理
-  // =========================
   function addButtons() {
     const subjects = document.querySelectorAll(`.subject:not([${ADDED_ATTR}])`);
 
@@ -82,7 +70,6 @@
     }
   }
 
-  // イベントデリゲーション：ドキュメント全体でシラバスボタンのクリックを一括監視
   document.addEventListener("click", (event) => {
     const button = event.target.closest(`.${BUTTON_CLASS}`);
     if (!button) return;
@@ -96,7 +83,6 @@
     }
   });
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsSyllabusButton = window.RitsSyllabusButton || {};
   window.RitsSyllabusButton.addButtons = addButtons;
 })();

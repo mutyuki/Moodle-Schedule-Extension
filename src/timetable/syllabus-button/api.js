@@ -29,7 +29,6 @@
     return null;
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsSyllabusButton = window.RitsSyllabusButton || {};
   window.RitsSyllabusButton.convertCodeToSyllabusUrl = convertCodeToSyllabusUrl;
 })();

@@ -1,7 +1,4 @@
 (() => {
-  // ============================================================
-  // 時間割表からコース一覧取得
-  // ============================================================
   function getCourseList() {
     const courses = [];
     const seen = {};
@@ -17,9 +14,6 @@
     return courses;
   }
 
-  // ============================================================
-  // コースページからアナウンスフォーラムIDを取得
-  // ============================================================
   async function getAnnouncementForumId(courseId) {
     try {
       const res = await fetch(`/course/view.php?id=${courseId}`);
@@ -44,9 +38,6 @@
     return null;
   }
 
-  // ============================================================
-  // フォーラムから未読投稿一覧を取得
-  // ============================================================
   async function getUnreadPosts(forumId) {
     try {
       const res = await fetch(`/mod/forum/view.php?id=${forumId}`);
@@ -131,9 +122,6 @@
       .replace(/'/g, "&#39;");
   }
 
-  // ============================================================
-  // 未読アナウンス読み込みメイン（キャッシュ付き）
-  // ============================================================
   async function loadUnreadAnnouncements() {
     const panelBody = document.querySelector("#rits-announce-panel .rits-panel-body");
     if (!panelBody) return;
@@ -176,7 +164,6 @@
     renderAnnouncements(panelBody, allResults);
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsUnreadAnnouncementList = window.RitsUnreadAnnouncementList || {};
   window.RitsUnreadAnnouncementList.loadUnreadAnnouncements = loadUnreadAnnouncements;
 })();

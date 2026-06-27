@@ -215,7 +215,6 @@
     }
   }
 
-  // グローバルオブジェクトに登録して他ファイルから参照可能にする
   window.RitsMoodleDeadlineColors = window.RitsMoodleDeadlineColors || {};
   window.RitsMoodleDeadlineColors.decorateTimeline = decorateTimeline;
 })();

@@ -1,7 +1,4 @@
 (() => {
-  // =========================
-  // 初回実行と監視
-  // =========================
   window.RitsSyllabusButton.addButtons();
 
   const observer = new MutationObserver(() => {
