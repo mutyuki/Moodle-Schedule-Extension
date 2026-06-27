@@ -1,0 +1,58 @@
+/* Hides the right drawer toggler button/container from the site */
+.drawer-toggler.drawer-right-toggle {
+  display: none !important;
+}
+
+/* Hides the footer popover button from the site */
+.btn-footer-popover[data-action="footer-popover"] {
+  display: none !important;
+}
+
+/* Syllabus Button styling */
+.my-syllabus-btn-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.my-syllabus-btn {
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 11px;
+  line-height: 1;
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition:
+    background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.my-syllabus-btn:hover {
+  background-color: hsl(356, 75%, 40%);
+  color: #ffffff;
+  border-color: hsl(356, 75%, 35%);
+  box-shadow: 0 4px 10px rgba(184, 29, 36, 0.15);
+  transform: translateY(-1px);
+}
+
+.my-syllabus-btn:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 1px 2px rgba(184, 29, 36, 0.05);
+}
+
+.my-syllabus-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, hsl(356, 75%, 40%) 50%, transparent);
+  outline-offset: 2px;
+}
+
