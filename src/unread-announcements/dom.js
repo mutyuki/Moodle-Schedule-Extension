@@ -1,8 +1,8 @@
 (() => {
   function initLayout() {
-    const mainGrid = document.getElementById("rits-main-grid");
-    const leftCol = document.getElementById("rits-left-col");
-    const rightCol = document.getElementById("rits-right-col");
+    let mainGrid = document.getElementById("rits-main-grid");
+    let leftCol = document.getElementById("rits-left-col");
+    let rightCol = document.getElementById("rits-right-col");
     const announcePanel = document.getElementById("rits-announce-panel");
     const timetableBlock = document.querySelector(
       '[data-block="rutime_table"], .block_rutime_table',
@@ -31,21 +31,18 @@
       const contentRegion = document.querySelector('[data-blockregion="content"]');
       if (!contentRegion) return;
 
-      let mainGrid = document.getElementById("rits-main-grid");
       if (!mainGrid) {
         mainGrid = document.createElement("div");
         mainGrid.id = "rits-main-grid";
         timetableBlock.parentNode.insertBefore(mainGrid, timetableBlock);
       }
 
-      let leftCol = document.getElementById("rits-left-col");
       if (!leftCol) {
         leftCol = document.createElement("div");
         leftCol.id = "rits-left-col";
         mainGrid.appendChild(leftCol);
       }
 
-      let rightCol = document.getElementById("rits-right-col");
       if (!rightCol) {
         rightCol = document.createElement("div");
         rightCol.id = "rits-right-col";
