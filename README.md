@@ -1,89 +1,33 @@
-# Moodle Schdule Extention
+# Moodle Schedule Extension
 
-Chrome拡張機能用のJavaScriptプロジェクトです。
+Moodleのダッシュボードや時間割などの表示をサポートするChrome拡張機能です。
 
-パッケージマネージャーはpnpm、フォーマッターとリンターはBiome、テストはVitestを使います。
-Chrome拡張機能の設定はManifest V3の`manifest.json`を起点にします。
+---
 
-## 必要なもの
+## ⚠️ 免責事項
 
-- pnpm
-- ChromeまたはChromium系ブラウザ
+* 本拡張機能は、個人の利便性向上のために開発された**非公式ツール**です。
+* 本拡張機能の利用（インストールや動作など）によって生じたいかなる損害、不具合、不利益、またはデータの損失等について、開発者は**一切の責任を負いません**。
+* すべて**自己責任**でのご利用をお願いいたします。
+* Moodle自体のアップデートや仕様変更により、本拡張機能が正常に動作しなくなる可能性があります。
 
-## セットアップ
+---
 
-```bash
-pnpm install
-```
+## 📦 インストール方法（使い方）
 
-## コマンド
+本拡張機能は現在、Chrome ウェブストア等には公開されていません。以下の手順で手動でインストールしてください。
 
-### フォーマット
+### 1. 拡張機能のダウンロード
+1. [GitHub Releases ページ](https://github.com/mutyuki/Moodle-Schdule-Extention/releases) にアクセスします。
+2. 最新のリリース（Latest）から、添付されている `extension.zip` をダウンロードします。
+3. ダウンロードした `extension.zip` ファイルを、PC上の任意の場所（「書類」フォルダなど）に解凍します。
 
-```bash
-pnpm format
-```
+### 2. Chrome への読み込み
+1. Google Chrome を起動します。
+2. アドレスバーに `chrome://extensions/` と入力して開きます。（または、右上のパズルマーク 🧩 ＞「拡張機能を管理」を選択します）
+3. 画面右上にある **「デベロッパー モード」** のトグルスイッチを **オン** にします。
+4. 画面左上に表示される **「パッケージ化されていない拡張機能を読み込む」** ボタンをクリックします。
+5. 先ほど `extension.zip` を解凍してできたフォルダ（`manifest.json` ファイルが直下に含まれているフォルダ）を選択します。
 
-### フォーマットチェック
-
-```bash
-pnpm format:check
-```
-
-### リント
-
-```bash
-pnpm lint
-```
-
-### Biomeチェック
-
-```bash
-pnpm check
-```
-
-### ビルド
-
-```bash
-pnpm build
-```
-
-### テスト
-
-```bash
-pnpm test
-```
-
-### テストのwatchモード
-
-```bash
-pnpm test:watch
-```
-
-## CI/CD
-
-GitHub ActionsでCIとChrome拡張機能用zipの作成を実行します。
-
-CIはPull Request作成時と`main`ブランチへのpush時に実行されます。依存関係は`pnpm install --frozen-lockfile`でインストールし、次のコマンドを順番に実行します。
-
-```bash
-pnpm format:check
-pnpm lint
-pnpm test
-pnpm build
-```
-
-CDは`main`ブランチへのpush時と手動実行時に実行されます。`pnpm build`で作成した`dist/`をzip化し、`extension.zip`をGitHub Actionsのartifactとして保存します。
-
-```bash
-pnpm build
-cd dist
-zip -r ../extension.zip .
-```
-
-## 開発メモ
-
-- npmではなくpnpmを使います。
-- フォーマットとリントはPrettier / ESLintではなくBiomeで実行します。
-- テストはVitestで実行します。
-- `package-lock.json`は作成せず、`pnpm-lock.yaml`を管理します。
+### 3. 動作確認
+拡張機能の一覧に **「Moodle Schedule Extension」** が追加され、有効化されていればインストールは完了です。Moodleのダッシュボードページを開き、表示が最適化されていることをご確認ください。
