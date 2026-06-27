@@ -1,6 +1,11 @@
 (() => {
   const DATE_PATTERN = /(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/;
 
+  const MS_PER_MINUTE = 60_000; // 60 * 1000
+  const MS_PER_DAY = 86_400_000; // 24 * 60 * 60 * 1000
+  const MINUTES_PER_HOUR = 60;
+  const MINUTES_PER_DAY = 1440; // 24 * 60
+
   function parseDate(text) {
     const match = text.match(DATE_PATTERN);
 
@@ -30,43 +35,43 @@
 
   function getDeadlineState(deadline) {
     const remainingMs = deadline.getTime() - Date.now();
-    const remainingMinutes = Math.ceil(remainingMs / 60_000);
-    const days = Math.floor((deadline - startOfToday()) / 86_400_000);
+    const remainingMinutes = Math.ceil(remainingMs / MS_PER_MINUTE);
+    const days = Math.floor((deadline - startOfToday()) / MS_PER_DAY);
 
     if (remainingMs < 0) {
-      const overdueMinutes = Math.floor(Math.abs(remainingMs) / 60_000);
+      const overdueMinutes = Math.floor(Math.abs(remainingMs) / MS_PER_MINUTE);
 
-      if (overdueMinutes < 60) {
+      if (overdueMinutes < MINUTES_PER_HOUR) {
         return {
           className: "moodle-deadline-overdue",
           label: `${Math.max(overdueMinutes, 1)}分超過`,
         };
       }
 
-      if (overdueMinutes < 1_440) {
+      if (overdueMinutes < MINUTES_PER_DAY) {
         return {
           className: "moodle-deadline-overdue",
-          label: `${Math.floor(overdueMinutes / 60)}時間超過`,
+          label: `${Math.floor(overdueMinutes / MINUTES_PER_HOUR)}時間超過`,
         };
       }
 
       return {
         className: "moodle-deadline-overdue",
-        label: `${Math.floor(overdueMinutes / 1_440)}日超過`,
+        label: `${Math.floor(overdueMinutes / MINUTES_PER_DAY)}日超過`,
       };
     }
 
-    if (remainingMinutes <= 60) {
+    if (remainingMinutes <= MINUTES_PER_HOUR) {
       return {
         className: "moodle-deadline-today",
         label: `残り${Math.max(remainingMinutes, 1)}分`,
       };
     }
 
-    if (remainingMinutes <= 1_440) {
+    if (remainingMinutes <= MINUTES_PER_DAY) {
       return {
         className: "moodle-deadline-soon",
-        label: `残り${Math.ceil(remainingMinutes / 60)}時間`,
+        label: `残り${Math.ceil(remainingMinutes / MINUTES_PER_HOUR)}時間`,
       };
     }
 
