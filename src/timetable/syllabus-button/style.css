@@ -1,13 +1,3 @@
-/* Hides the right drawer toggler button/container from the site */
-.drawer-toggler.drawer-right-toggle {
-  display: none !important;
-}
-
-/* Hides the footer popover button from the site */
-.btn-footer-popover[data-action="footer-popover"] {
-  display: none !important;
-}
-
 /* Syllabus Button styling */
 .my-syllabus-btn-wrap {
   width: 100%;

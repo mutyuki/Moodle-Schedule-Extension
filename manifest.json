@@ -38,7 +38,10 @@
         "src/timetable/syllabus-button/dom.js",
         "src/timetable/syllabus-button/content.js"
       ],
-      "css": ["src/timetable/syllabus-button/style.css"],
+      "css": [
+        "src/global.css",
+        "src/timetable/syllabus-button/style.css"
+      ],
       "run_at": "document_idle"
     }
   ],

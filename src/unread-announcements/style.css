@@ -191,12 +191,3 @@
 }
 
 
-/* 各ブロックヘッダーのフォントサイズ統一（タイムライン） */
-.block_timeline .card-title,
-[data-block="timeline"] .card-title,
-.block_timeline h5,
-[data-block="timeline"] h5 {
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
-}
