@@ -81,34 +81,45 @@
     }
   }
 
-  // ============================================================
-  // アナウンス一覧レンダリング
-  // ============================================================
   function renderAnnouncements(container, results) {
     if (!results || results.length === 0) {
       container.innerHTML = '<div class="rits-empty">未読アナウンスはありません</div>';
       return;
     }
-    let html = "";
-    for (const item of results) {
-      const shortName = item.course.name.replace(/^\d+:/, "").split("\u00A7")[0].trim();
-      html += '<div class="rits-course-section">';
-      html += '<div class="rits-course-header">';
-      html += `<a href="${esc(item.course.href)}" title="${esc(item.course.name)}">${esc(shortName)}</a>`;
-      html += `<span class="rits-unread-badge">${item.posts.length}件</span>`;
-      html += "</div>";
-      html += '<div class="rits-post-list">';
-      for (const p of item.posts) {
-        html += '<div class="rits-post-item">';
-        html += `<div class="rits-post-title"><a href="${esc(p.href)}" target="_blank">${esc(p.title)}</a></div>`;
-        html += `<span class="rits-post-date">${esc(p.date)}</span>`;
-        html += "</div>";
-      }
-      html += "</div>";
-      html += "</div>";
-    }
-    html += `<div style="text-align:right;font-size:10px;color:#94a3b8;padding:10px 4px 0;">最終更新: ${new Date().toLocaleTimeString("ja-JP")}</div>`;
-    container.innerHTML = html;
+
+    const sections = results
+      .map((item) => {
+        const shortName = item.course.name.replace(/^\d+:/, "").split("\u00A7")[0].trim();
+        const postItems = item.posts
+          .map(
+            (p) => `
+          <div class="rits-post-item">
+            <div class="rits-post-title">
+              <a href="${esc(p.href)}" target="_blank">${esc(p.title)}</a>
+            </div>
+            <span class="rits-post-date">${esc(p.date)}</span>
+          </div>
+        `,
+          )
+          .join("");
+
+        return `
+        <div class="rits-course-section">
+          <div class="rits-course-header">
+            <a href="${esc(item.course.href)}" title="${esc(item.course.name)}">${esc(shortName)}</a>
+            <span class="rits-unread-badge">${item.posts.length}件</span>
+          </div>
+          <div class="rits-post-list">
+            ${postItems}
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    const lastUpdated = `<div style="text-align:right;font-size:10px;color:#94a3b8;padding:10px 4px 0;">最終更新: ${new Date().toLocaleTimeString("ja-JP")}</div>`;
+
+    container.innerHTML = sections + lastUpdated;
   }
 
   function esc(s) {
