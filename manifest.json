@@ -12,17 +12,33 @@
     {
       "matches": ["https://lms.ritsumei.ac.jp/my/", "https://lms.ritsumei.ac.jp/my/index.php"],
       "js": [
-        "src/unread_annoucement_list/content.js",
-        "src/timetable-period-times/content.js",
-        "src/moodle-deadline-colors.user.js"
+        "src/unread-announcements/dom.js",
+        "src/unread-announcements/api.js",
+        "src/timetable/dom.js",
+        "src/timetable/content.js",
+        "src/timeline/utils.js",
+        "src/timeline/dom.js",
+        "src/timeline/content.js",
+        "src/dashboard-layout/dom.js",
+        "src/dashboard-layout/content.js"
       ],
-      "css": ["src/unread_annoucement_list/style.css", "src/timetable-custom.css"],
+      "css": [
+        "src/dashboard-layout/style.css",
+        "src/unread-announcements/style.css",
+        "src/timetable/style.css",
+        "src/timeline/style.css"
+      ],
       "run_at": "document_idle"
     },
     {
       "matches": ["https://lms.ritsumei.ac.jp/*"],
-      "js": ["src/button/content.js"],
-      "css": ["src/button/style.css"],
+      "js": [
+        "src/timetable/syllabus-button/cache.js",
+        "src/timetable/syllabus-button/api.js",
+        "src/timetable/syllabus-button/dom.js",
+        "src/timetable/syllabus-button/content.js"
+      ],
+      "css": ["src/global.css", "src/timetable/syllabus-button/style.css"],
       "run_at": "document_idle"
     }
   ],
