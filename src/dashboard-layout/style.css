@@ -6,8 +6,10 @@ body.limitedwidth #page.drawers,
 }
 body.limitedwidth #page.drawers .main-inner,
 .pagelayout-standard #page.drawers .main-inner {
-  max-width: none !important;
+  max-width: 1920px !important;
   width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   padding-left: 8px !important;
   padding-right: 8px !important;
 }
