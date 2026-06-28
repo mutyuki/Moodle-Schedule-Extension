@@ -1,5 +1,5 @@
 {
-  "name": "moodle-schdule-extention",
+  "name": "moodle-schedule-extension",
   "version": "0.1.0",
   "private": true,
   "description": "Chrome extension project for Moodle schedule support.",
